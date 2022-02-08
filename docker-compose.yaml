@@ -1,0 +1,17 @@
+services:
+
+  db:
+    image: postgres:latest
+    restart: always
+    environment:
+      POSTGRES_USER: atem
+      POSTGRES_PASSWORD: osiris
+      POSTGRES_DB: ygo_app
+    ports:
+      - "5432:5432"
+
+  adminer:
+    image: adminer:latest
+    restart: always
+    ports:
+      - "8080:8080"

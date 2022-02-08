@@ -38,16 +38,25 @@ func (conn *Connection) CreateTables() {
 }
 
 func (conn *Connection) ImportCards() {
-	cards, err := app.GetAllCards(nil)
-	if err != nil {
-		fmt.Println(err.Error())
-		return
-	}
-	for _, card := range cards.Data {
+	conn.CreateTables()
+
+	en, fr, pt := app.GetAllCardsLanguages()
+
+	for _, card := range pt.Data {
 		conn.DB.Exec(`
 		INSERT INTO
 			cards
 		VALUES
-		(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, card.ID, card.Name, card.Type, card.Desc, card.CardImages[0].ID, card.Attribute, card.Race, card.Archetype, card.CardPrices[0].TcgplayerPrice, card.Atk, card.Def, card.Level)
+		(?, ?, 'name_en', 'name_fr', ?, ?, 'desc_en', 'desc_fr', ?, ?, ?, ?, ?, ?, ?, ?)`, card.ID, card.Name, card.Type, card.Desc, card.CardImages[0].ID, card.Attribute, card.Race, card.Archetype, card.CardPrices[0].TcgplayerPrice, card.Atk, card.Def, card.Level)
+	}
+
+	for _, card := range en.Data {
+		conn.DB.Exec(`
+		UPDATE cards SET name_en = ?, description_en = ? WHERE id = ?;`, card.Name, card.Desc, card.ID)
+	}
+
+	for _, card := range fr.Data {
+		conn.DB.Exec(`
+		UPDATE cards SET name_fr = ?, description_fr = ? WHERE id = ?;`, card.Name, card.Desc, card.ID)
 	}
 }

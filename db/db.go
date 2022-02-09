@@ -42,17 +42,17 @@ func (conn *Connection) ImportCards() {
 
 	en, fr, pt := app.GetAllCardsLanguages()
 
-	for _, card := range pt.Data {
+	for _, card := range en.Data {
 		conn.DB.Exec(`
 		INSERT INTO
 			cards
 		VALUES
-		(?, ?, 'name_en', 'name_fr', ?, ?, 'desc_en', 'desc_fr', ?, ?, ?, ?, ?, ?, ?, ?)`, card.ID, card.Name, card.Type, card.Desc, card.CardImages[0].ID, card.Attribute, card.Race, card.Archetype, card.CardPrices[0].TcgplayerPrice, card.Atk, card.Def, card.Level)
+		(?, ?, 'name_pt', 'name_fr', ?, ?, 'desc_pt', 'desc_fr', ?, ?, ?, ?, ?, ?, ?, ?)`, card.ID, card.Name, card.Type, card.Desc, card.CardImages[0].ID, card.Attribute, card.Race, card.Archetype, card.CardPrices[0].TcgplayerPrice, card.Atk, card.Def, card.Level)
 	}
 
-	for _, card := range en.Data {
+	for _, card := range pt.Data {
 		conn.DB.Exec(`
-		UPDATE cards SET name_en = ?, description_en = ? WHERE id = ?;`, card.Name, card.Desc, card.ID)
+		UPDATE cards SET name_pt = ?, description_pt = ? WHERE id = ?;`, card.Name, card.Desc, card.ID)
 	}
 
 	for _, card := range fr.Data {

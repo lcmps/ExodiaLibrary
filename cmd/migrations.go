@@ -15,12 +15,7 @@ var migrateCmd = &cobra.Command{
 		if err != nil {
 			fmt.Println(err.Error())
 		}
-		// conn.CreateTables()
 		conn.ImportCards()
-		// fmt.Println("Migrate and populate Databases;")
-
-		// app.GetAllCardsLanguages()
-
 		return nil
 	},
 }

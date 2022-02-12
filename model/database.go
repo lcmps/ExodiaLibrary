@@ -1,5 +1,6 @@
 package model
 
+// CardList is a struct that represents the default database table
 type Cards struct {
 	ID            int    `gorm:"type:integer; primary key; not null" json:"id"`
 	Name          string `gorm:"type: text; not null" json:"name"`

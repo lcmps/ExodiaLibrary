@@ -13,3 +13,8 @@ type CardQuery struct {
 	Limit     int    `form:"limit"`
 	Offset    int    `form:"offset"`
 }
+
+type CardResponse struct {
+	Total int64   `json:"total"`
+	Cards []Cards `json:"cards"`
+}

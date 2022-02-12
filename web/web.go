@@ -1,6 +1,8 @@
 package web
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 	"github.com/lcmps/ExodiaLibrary/app"
 	"github.com/lcmps/ExodiaLibrary/db"
@@ -30,6 +32,15 @@ func New() (*WebApp, error) {
 
 func (App *WebApp) Host() {
 	r := gin.Default()
+
+	r.GET("/", home)
+
+	// Assets
+	r.Static("/css", "./pages/assets/css")
+	r.Static("/js", "./pages/assets/js")
+	r.LoadHTMLGlob("./pages/html/*.html")
+
+	// API
 	r.GET("/card", getAllCards)
 	r.GET("/spell", getSpellCards)
 	r.GET("/monster", getMonsterCards)
@@ -42,23 +53,33 @@ func (App *WebApp) Host() {
 	}
 }
 
+func home(ctx *gin.Context) {
+	ctx.HTML(
+		http.StatusOK,
+		"index.html",
+		gin.H{
+			"title": "Exodia Library",
+		},
+	)
+}
+
 func getAllCards(ctx *gin.Context) {
 	var q model.CardQuery
 
 	err := ctx.ShouldBindQuery(&q)
 	if err != nil {
-		ctx.JSON(400, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
 	cn, err := db.InitConnection()
 	if err != nil {
-		ctx.JSON(500, gin.H{"error": err.Error()})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
 	}
 
 	m := cn.GetCardsByFilter(q)
-	ctx.JSON(200, m)
+	ctx.JSON(http.StatusOK, m)
 }
 
 func getSpellCards(ctx *gin.Context) {

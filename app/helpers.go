@@ -2,6 +2,7 @@ package app
 
 import (
 	"fmt"
+	"os"
 	"sync"
 
 	"github.com/lcmps/ExodiaLibrary/model"
@@ -23,6 +24,44 @@ func GetAllCards(opt interface{}) (model.CardList, error) {
 		return jsonResp, err
 	}
 	return jsonResp, nil
+}
+
+func DownloadImages() {
+	c, err := GetAllCards(nil)
+	if err != nil {
+		fmt.Printf("Error executing request: %s\n", err.Error())
+		return
+	}
+
+	for _, card := range c.Data {
+		fmt.Printf("Saving Image from %s\n", card.Name)
+		for _, img := range card.CardImages {
+			fmt.Println(img.ImageURL)
+			b, err := MakeRequestFastHTTP(img.ImageURL, nil, nil)
+			if err != nil {
+				fmt.Printf("Error executing request: %s\n", err.Error())
+				continue
+			}
+			fileName, err := buildFileName(img.ImageURL)
+			if err != nil {
+				fmt.Printf("Error building file name: %s\n", err.Error())
+			}
+
+			file, err := os.Create("./pages/img/" + fileName)
+			if err != nil {
+				fmt.Printf("Error creating file: %s\n", err.Error())
+				continue
+			}
+			defer file.Close()
+
+			_, err = file.Write(b)
+			if err != nil {
+				fmt.Printf("Error writing file: %s\n", err.Error())
+				continue
+			}
+			file.Close()
+		}
+	}
 }
 
 func GetAllCardsLanguages() (english model.CardList, french model.CardList, portuguese model.CardList) {

@@ -107,8 +107,9 @@ func getQueryMap(mod model.CardQuery) map[string]interface{} {
 	return w
 }
 
-func (conn *Connection) GetCardsByFilter(mod model.CardQuery) []model.Cards {
+func (conn *Connection) GetCardsByFilter(mod model.CardQuery) model.CardResponse {
 	var res []model.Cards
+	var queryCount int64
 	w := getQueryMap(mod)
 
 	tx := conn.DB.Select(`id, name,	name_pt,
@@ -134,9 +135,12 @@ func (conn *Connection) GetCardsByFilter(mod model.CardQuery) []model.Cards {
 		}
 
 	}
-	fmt.Println(tx)
 
+	tx.Count(&queryCount)
 	tx.Find(&res)
 
-	return res
+	return model.CardResponse{
+		Total: queryCount,
+		Cards: res,
+	}
 }

@@ -4,7 +4,9 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"net/url"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/valyala/fasthttp"
@@ -71,4 +73,17 @@ func MakeRequestFastHTTP(url string, header map[string]string, obj interface{}) 
 		return nil, errRetries
 	}
 	return body, nil
+}
+
+func buildFileName(urlInput string) (string, error) {
+	fileUrl, err := url.Parse(urlInput)
+	if err != nil {
+		return "", err
+	}
+
+	path := fileUrl.Path
+	segments := strings.Split(path, "/")
+
+	fileName := segments[len(segments)-1]
+	return fileName, nil
 }

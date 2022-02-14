@@ -36,18 +36,23 @@ func DownloadImages() {
 	for _, card := range c.Data {
 		fmt.Printf("Saving Image from %s\n", card.Name)
 		for _, img := range card.CardImages {
-			fmt.Println(img.ImageURL)
-			b, err := MakeRequestFastHTTP(img.ImageURL, nil, nil)
-			if err != nil {
-				fmt.Printf("Error executing request: %s\n", err.Error())
-				continue
-			}
+			fmt.Println("Checking if image exists")
 			fileName, err := buildFileName(img.ImageURL)
 			if err != nil {
 				fmt.Printf("Error building file name: %s\n", err.Error())
 			}
 
-			file, err := os.Create("./pages/img/" + fileName)
+			if _, err := os.Stat("./pages/card-img/" + fileName); err == nil {
+				fmt.Println("Image exists, skiping")
+				continue
+			}
+
+			b, err := MakeRequestFastHTTP(img.ImageURL, nil, nil)
+			if err != nil {
+				fmt.Printf("Error executing request: %s\n", err.Error())
+				continue
+			}
+			file, err := os.Create("./pages/card-img/" + fileName)
 			if err != nil {
 				fmt.Printf("Error creating file: %s\n", err.Error())
 				continue

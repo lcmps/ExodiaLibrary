@@ -38,13 +38,13 @@ func (App *WebApp) Host() {
 	// Assets
 	r.Static("/css", "./pages/assets/css")
 	r.Static("/js", "./pages/assets/js")
+	r.Static("/card-img", "./pages/assets/card-img")
+
+	// HTML
 	r.LoadHTMLGlob("./pages/html/*.html")
 
 	// API
 	r.GET("/card", getAllCards)
-	r.GET("/spell", getSpellCards)
-	r.GET("/monster", getMonsterCards)
-	r.GET("/trap", getTrapCards)
 
 	gin.SetMode(App.Config.Env)
 	err := r.Run(":" + App.Config.Web_Port)
@@ -80,13 +80,4 @@ func getAllCards(ctx *gin.Context) {
 
 	m := cn.GetCardsByFilter(q)
 	ctx.JSON(http.StatusOK, m)
-}
-
-func getSpellCards(ctx *gin.Context) {
-}
-
-func getMonsterCards(ctx *gin.Context) {
-}
-
-func getTrapCards(ctx *gin.Context) {
 }

@@ -51,6 +51,10 @@ func (conn *Connection) ImportCards() {
 		(?, ?, 'name_pt', 'name_fr', ?, ?, 'desc_pt', 'desc_fr', ?, ?, ?, ?, ?, ?, ?, ?)`, card.ID, card.Name,
 			card.Type, card.Desc, card.CardImages[0].ID, card.Attribute, card.Race, card.Archetype,
 			card.CardPrices[0].TcgplayerPrice, card.Atk, card.Def, card.Level)
+
+		for _, img := range card.CardImages {
+			conn.DB.Exec(`UPDATE cards SET image = array_append(image, ?) where id = ?`, img.ID, card.ID)
+		}
 	}
 
 	for _, card := range pt.Data {

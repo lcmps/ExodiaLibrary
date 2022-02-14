@@ -133,7 +133,12 @@ func (conn *Connection) GetCardsByFilter(mod model.CardQuery) model.CardResponse
 		}
 
 		if reflect.TypeOf(v) == reflect.TypeOf("") {
-			tx.Where("lower("+k+") LIKE lower(?)", "%"+v.(string)+"%")
+
+			if k == "name" {
+				tx.Where("name_pt LIKE ? OR name_fr LIKE ? OR name LIKE ?", "%"+v.(string)+"%", "%"+v.(string)+"%", "%"+v.(string)+"%")
+			} else {
+				tx.Where("lower("+k+") LIKE lower(?)", "%"+v.(string)+"%")
+			}
 		} else {
 			tx.Where(k+" = ?", v)
 		}

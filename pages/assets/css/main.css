@@ -1,0 +1,65 @@
+@keyframes glyphs{
+    from {
+        color: #00e50017;
+    }
+    to {
+        color: #00e500;
+    }
+}
+
+body{
+background-color: #18191A;
+}
+
+.anima{
+    animation: move-left-right 4s infinite;
+    position: relative;
+}
+
+.index-page .squares {
+    background: linear-gradient(51deg, #00e50017 0%, #02c9084a 100%);
+}
+
+.navbar.navbar-transparent {
+    background: transparent !important;
+    padding-top: 5px;
+}
+
+.navbar {
+    background: #18191A;
+}
+
+.dropdown-menu{
+    background-color: #18191A;
+}
+
+.dropdown-menu:before{
+    background-color: #18191A;
+    color: #18191A;
+}
+
+/* width */
+::-webkit-scrollbar {
+    width: 0.4rem;
+}
+  /* Track */
+::-webkit-scrollbar-track {
+    border-radius: 10px;
+}
+
+  /* Handle */
+::-webkit-scrollbar-thumb {
+    background: #F5CDAA; 
+    border-radius: 10px;
+}
+  /* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+    background: #F5CDAA; 
+}
+
+@media screen and (max-width: 991px)
+{
+.navbar-collapse {
+    background: #18191A;
+}
+}

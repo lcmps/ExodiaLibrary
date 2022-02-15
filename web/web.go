@@ -33,18 +33,23 @@ func New() (*WebApp, error) {
 func (App *WebApp) Host() {
 	r := gin.Default()
 
-	r.GET("/", home)
-
 	// Assets
 	r.Static("/css", "./pages/assets/css")
 	r.Static("/js", "./pages/assets/js")
-	r.Static("/card-img", "./pages/assets/card-img")
-
-	// HTML
-	r.LoadHTMLGlob("./pages/html/*.html")
+	r.Static("/fvc", "./pages/assets/fvc")
+	r.Static("/img", "./pages/assets/img")
+	r.Static("/card-img", "./pages/card-img")
+	r.Static("/fonts", "./pages/assets/fonts")
 
 	// API
 	r.GET("/card", getAllCards)
+	r.GET("/random", GetRandomCards)
+
+	// Pages
+	r.GET("/", home)
+
+	// HTML
+	r.LoadHTMLGlob("./pages/html/*.html")
 
 	gin.SetMode(App.Config.Env)
 	err := r.Run(":" + App.Config.Web_Port)
@@ -58,7 +63,7 @@ func home(ctx *gin.Context) {
 		http.StatusOK,
 		"index.html",
 		gin.H{
-			"title": "Exodia Library",
+			"title": "𓂀 Exodia Library 𓂀",
 		},
 	)
 }
@@ -79,5 +84,16 @@ func getAllCards(ctx *gin.Context) {
 	}
 
 	m := cn.GetCardsByFilter(q)
+	ctx.JSON(http.StatusOK, m)
+}
+
+func GetRandomCards(ctx *gin.Context) {
+	cn, err := db.InitConnection()
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	m := cn.GetTenRandomCards()
 	ctx.JSON(http.StatusOK, m)
 }

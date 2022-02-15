@@ -10,6 +10,8 @@ import (
 	"gorm.io/gorm"
 )
 
+const Selection = `id, name, name_pt, name_fr, "type", description, description_pt, description_fr, image,	"attribute", race, archetype, price, atk, def, "level"`
+
 type Connection struct {
 	DB     *gorm.DB
 	Config *app.Config
@@ -116,10 +118,7 @@ func (conn *Connection) GetCardsByFilter(mod model.CardQuery) model.CardResponse
 	var queryCount int64
 	w := getQueryMap(mod)
 
-	tx := conn.DB.Select(`id, name,	name_pt,
-	name_fr , "type" , description, description_pt,
-	description_fr , image,	"attribute" , race ,
-	archetype, price, atk, def, "level"`).Table(`cards`)
+	tx := conn.DB.Select(Selection).Table(`cards`)
 
 	for k, v := range w {
 
@@ -152,4 +151,10 @@ func (conn *Connection) GetCardsByFilter(mod model.CardQuery) model.CardResponse
 		Total: queryCount,
 		Cards: res,
 	}
+}
+
+func (conn *Connection) GetTenRandomCards() []model.Cards {
+	var res []model.Cards
+	conn.DB.Raw(`select * from cards tablesample bernoulli(1) where name_pt != 'name_pt' and name_fr != 'name_fr' order by random() limit 10;`).Find(&res)
+	return res
 }

@@ -88,12 +88,23 @@ func getAllCards(ctx *gin.Context) {
 }
 
 func GetRandomCards(ctx *gin.Context) {
+
+	var lim struct {
+		Limit int `json:"limit"`
+	}
+
+	err := ctx.ShouldBindQuery(&lim)
+	if err != nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
 	cn, err := db.InitConnection()
 	if err != nil {
 		ctx.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	m := cn.GetTenRandomCards()
+	m := cn.GetRandomCards(lim.Limit)
 	ctx.JSON(http.StatusOK, m)
 }

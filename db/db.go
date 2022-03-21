@@ -153,8 +153,13 @@ func (conn *Connection) GetCardsByFilter(mod model.CardQuery) model.CardResponse
 	}
 }
 
-func (conn *Connection) GetTenRandomCards() []model.Cards {
+func (conn *Connection) GetRandomCards(lim int) []model.Cards {
 	var res []model.Cards
-	conn.DB.Raw(`select * from cards tablesample bernoulli(1) where name_pt != 'name_pt' and name_fr != 'name_fr' order by random() limit 10;`).Find(&res)
+
+	if lim == 0 {
+		lim = 1
+	}
+
+	conn.DB.Raw(`select * from cards tablesample bernoulli(1) where name_pt != 'name_pt' and name_fr != 'name_fr' order by random() limit ?;`, lim).Find(&res)
 	return res
 }

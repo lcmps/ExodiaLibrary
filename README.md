@@ -219,7 +219,9 @@ Quite simply, it's the actual card in `.jpg` format, you have to provide ID+.jpg
 --url http://localhost:9001/card-img/84451804.jpg`
 
 <center>
+
 ![Des Frog card!](/pages/card-img/84451804.jpg "Des Frog")
+
 </center>
 
 ### Docker build and run

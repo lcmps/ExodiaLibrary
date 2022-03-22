@@ -2,6 +2,10 @@ module github.com/lcmps/ExodiaLibrary
 
 go 1.17
 
+replace(
+	
+	)
+
 require (
 	github.com/gin-gonic/gin v1.7.7
 	github.com/lib/pq v1.10.4

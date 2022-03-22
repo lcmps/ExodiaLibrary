@@ -24,7 +24,8 @@ func InitConnection() (Connection, error) {
 		return conn, err
 	}
 	conn.Config = appData
-	connString := fmt.Sprintf(`host=localhost user=%s password=%s dbname=%s sslmode=disable`,
+	connString := fmt.Sprintf(`host=%s user=%s password=%s dbname=%s sslmode=disable`,
+		conn.Config.DB_Host,
 		conn.Config.DB_User,
 		conn.Config.DB_Pass,
 		conn.Config.DB_Name)
